@@ -14,6 +14,10 @@ w_avg = mean(temp_matrix, 2);
 w_avg_train = w_avg(1:n_train);
 w_avg_test = w_avg(n_train+1:end);
 
+
+n = length(data_train.LOAD);
+n_v = length(data_test.LOAD);
+
 %% Plot Esplorativi
 
 %carico in funzione del tempo
@@ -38,4 +42,4 @@ title('carico elettrico in funzione della temperatura media')
 matrix_corr = corr(table2array(data(:, 2:27)));
 
 % Salvataggio per gli script successivi
-save('preprocessed_data.mat', 'w_avg', 'data_train', 'data_test', 'w_avg_train', 'w_avg_test');
+save('preprocessed_data.mat', 'w_avg', 'data_train', 'data_test', 'w_avg_train', 'w_avg_test', 'n', 'n_v');
