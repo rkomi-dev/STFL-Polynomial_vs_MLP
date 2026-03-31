@@ -6,17 +6,22 @@ data = readtable('L1_train.csv');
 data = rmmissing(data);
 
 n_train = floor(0.70 * height(data));
-data_train = data(1:n_train, :);         
-data_test  = data(n_train+1:end, :);
+n_val = floor(0.15 * height(data));
+
+data_train = data(1:n_train, :);   
+data_val = data(n_train + 1: n_train + n_val, :);
+data_test  = data(n_train + n_val + 1:end, :);
 
 temp_matrix = table2array(data(:, 3:27));
 w_avg = mean(temp_matrix, 2);
 w_avg_train = w_avg(1:n_train);
-w_avg_test = w_avg(n_train+1:end);
+w_avg_val   = w_avg(n_train + 1 : n_train + n_val);
+w_avg_test  = w_avg(n_train + n_val + 1 : end);
 
 
 n = length(data_train.LOAD);
-n_v = length(data_test.LOAD);
+n_v = length(data_val.LOAD);
+n_t = length(data_test.LOAD);
 
 %% Plot Esplorativi
 
@@ -42,4 +47,5 @@ title('carico elettrico in funzione della temperatura media')
 matrix_corr = corr(table2array(data(:, 2:27)));
 
 % Salvataggio per gli script successivi
-save('preprocessed_data.mat', 'w_avg', 'data_train', 'data_test', 'w_avg_train', 'w_avg_test', 'n', 'n_v');
+save('preprocessed_data.mat', 'w_avg', 'data_train', 'data_val', 'data_test', 'w_avg_train', 'w_avg_val', ...
+    'w_avg_test', 'n', 'n_v', 'n_t');

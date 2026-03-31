@@ -20,16 +20,15 @@ y_hat_train = X_train_step * theta_step;
 
 % Test sul set di validazione
 
-X_test_candidati = [ w_avg_test, data_test.TIMESTAMP,  w_avg_test.^2, data_test.TIMESTAMP.^2, ...
-    w_avg_test.*data_test.TIMESTAMP,  w_avg_test.^3, data_test.TIMESTAMP.^3, ...
-    ( w_avg_test.^2).* data_test.TIMESTAMP,  w_avg_test.*(data_test.TIMESTAMP.^2), ...
-    w_avg_test.^4, data_test.TIMESTAMP.^4, (w_avg_test.^2).*(data_test.TIMESTAMP.^2)];%, w_avg_test.^5];
+X_test_candidati = [ w_avg_val, data_val.TIMESTAMP,  w_avg_val.^2, data_val.TIMESTAMP.^2, ...
+    w_avg_val.*data_val.TIMESTAMP,  w_avg_val.^3, data_val.TIMESTAMP.^3, ...
+    ( w_avg_val.^2).* data_val.TIMESTAMP,  w_avg_val.*(data_val.TIMESTAMP.^2), ...
+    w_avg_val.^4, data_val.TIMESTAMP.^4, (w_avg_val.^2).*(data_val.TIMESTAMP.^2)];%, w_avg_val.^5];
 
-X_test_step = [ones(length(w_avg_test), 1), X_test_candidati(:, in)];
-
-y_hat_step = X_test_step * theta_step;
-RMSE_step_train = sqrt(mean((data_train.LOAD - y_hat_train).^2))
-RMSE_step_test = sqrt(mean((data_test.LOAD - y_hat_step).^2))
+X_val_step = [ones(n_v, 1), X_test_candidati(:, in)];
+y_hat_step = X_val_step * theta_step;
+RMSE_step_train = sqrt(mean((data_train.LOAD - y_hat_train).^2));
+RMSE_step_val = sqrt(mean((data_val.LOAD - y_hat_step).^2));
 
 %% surfacing stepwise
 

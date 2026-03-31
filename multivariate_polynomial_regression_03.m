@@ -12,7 +12,7 @@ scatter3(w_avg_train, data_train.TIMESTAMP, data_train.LOAD, 'b'); xlabel('temp 
 title('scatter identificazione');
 
 figure(15)
-scatter3(w_avg_test, data_test.TIMESTAMP, data_test.LOAD, '*', 'r');
+scatter3(w_avg_val, data_val.TIMESTAMP, data_val.LOAD, '*', 'r');
 title('scatter validazione');
 
 %% modello quadratico + 1 termine di interazione
@@ -128,24 +128,31 @@ scatter3(w_avg_train, data_train.TIMESTAMP, data_train.LOAD, 5, 'b', 'filled', '
 title('superficie con modello quarto grado')
 %% cross-validazione
 
-phi_V_quadratico = [ones(n_v, 1), w_avg_test, data_test.TIMESTAMP, w_avg_test.^2, data_test.TIMESTAMP.^2, w_avg_test.*data_test.TIMESTAMP];
+phi_V_quadratico = [ones(n_v, 1), w_avg_val, data_val.TIMESTAMP, w_avg_val.^2, data_val.TIMESTAMP.^2, ...
+    w_avg_val.*data_val.TIMESTAMP];
 load_cap_V_quadratico = phi_V_quadratico * thetaLS_quadratico;
-epsilon_V_quadratico = data_test.LOAD - load_cap_V_quadratico;
+epsilon_V_quadratico = data_val.LOAD - load_cap_V_quadratico;
 SSR_V_quadratico = epsilon_V_quadratico' * epsilon_V_quadratico;
 
-phi_V_cubico = [ones(n_v, 1), w_avg_test, data_test.TIMESTAMP, w_avg_test.^2, data_test.TIMESTAMP.^2, w_avg_test.*data_test.TIMESTAMP, w_avg_test.^3, data_test.TIMESTAMP.^3];
+phi_V_cubico = [ones(n_v, 1), w_avg_val, data_val.TIMESTAMP, w_avg_val.^2, data_val.TIMESTAMP.^2, ...
+    w_avg_val.*data_val.TIMESTAMP, w_avg_val.^3, data_val.TIMESTAMP.^3];
 load_cap_V_cubico = phi_V_cubico * thetaLS_cubico;
-epsilon_V_cubico = data_test.LOAD - load_cap_V_cubico;
+epsilon_V_cubico = data_val.LOAD - load_cap_V_cubico;
 SSR_V_cubico = epsilon_V_cubico' * epsilon_V_cubico;
 
-phi_V_cubico_plus = [ones(n_v, 1), w_avg_test, data_test.TIMESTAMP, w_avg_test.^2, data_test.TIMESTAMP.^2, w_avg_test.*data_test.TIMESTAMP, w_avg_test.^3, data_test.TIMESTAMP.^3,  (w_avg_test.^2).*data_test.TIMESTAMP, w_avg_test.*(data_test.TIMESTAMP.^2)];
+phi_V_cubico_plus = [ones(n_v, 1), w_avg_val, data_val.TIMESTAMP, w_avg_val.^2, data_val.TIMESTAMP.^2, ...
+    w_avg_val.*data_val.TIMESTAMP, w_avg_val.^3, data_val.TIMESTAMP.^3, ...
+    (w_avg_val.^2).*data_val.TIMESTAMP, w_avg_val.*(data_val.TIMESTAMP.^2)];
 load_cap_V_cubico_plus = phi_V_cubico_plus * thetaLS_cubico_plus;
-epsilon_V_cubico_plus = data_test.LOAD - load_cap_V_cubico_plus;
+epsilon_V_cubico_plus = data_val.LOAD - load_cap_V_cubico_plus;
 SSR_V_cubico_plus = epsilon_V_cubico_plus' * epsilon_V_cubico_plus;
 
-phi_V_quarto = [ones(n_v, 1), w_avg_test, data_test.TIMESTAMP, w_avg_test.^2, data_test.TIMESTAMP.^2, w_avg_test.*data_test.TIMESTAMP, w_avg_test.^3, data_test.TIMESTAMP.^3,  (w_avg_test.^2).*data_test.TIMESTAMP, w_avg_test.*(data_test.TIMESTAMP.^2), w_avg_test.^4, data_test.TIMESTAMP.^4];
+phi_V_quarto = [ones(n_v, 1), w_avg_val, data_val.TIMESTAMP, w_avg_val.^2, data_val.TIMESTAMP.^2, ...
+    w_avg_val.*data_val.TIMESTAMP, w_avg_val.^3, data_val.TIMESTAMP.^3, ...
+    (w_avg_val.^2).*data_val.TIMESTAMP, w_avg_val.*(data_val.TIMESTAMP.^2), ...
+    w_avg_val.^4, data_val.TIMESTAMP.^4];
 load_cap_V_quarto = phi_V_quarto * thetaLS_quarto;
-epsilon_V_quarto = data_test.LOAD - load_cap_V_quarto;
+epsilon_V_quarto = data_val.LOAD - load_cap_V_quarto;
 SSR_V_quarto = epsilon_V_quarto' * epsilon_V_quarto;
 min_SSR_V = min([SSR_V_quadratico, SSR_V_cubico, SSR_V_cubico_plus, SSR_V_quarto]);
 
@@ -166,24 +173,24 @@ end
 
 %% confronto complessità vs RMSE
 
-RMSE_quadratico_train = sqrt(SSR_quadratico / n)
-RMSE_quadratico_test = sqrt(SSR_V_quadratico / n_v)
-RMSE_cubico_train = sqrt(SSR_cubico / n)
-RMSE_cubico_test = sqrt(SSR_V_cubico / n_v)
-RMSE_cubico_plus_train = sqrt(SSR_cubico_plus / n)
-RMSE_cubico_plus_test = sqrt(SSR_V_cubico_plus / n_v)
-RMSE_quarto_train = sqrt(SSR_quarto / n)
-RMSE_quarto_test = sqrt(SSR_V_quarto / n_v)
+RMSE_quadratico_train = sqrt(SSR_quadratico / n);
+RMSE_quadratico_val = sqrt(SSR_V_quadratico / n_v);
+RMSE_cubico_train = sqrt(SSR_cubico / n);
+RMSE_cubico_val = sqrt(SSR_V_cubico / n_v);
+RMSE_cubico_plus_train = sqrt(SSR_cubico_plus / n);
+RMSE_cubico_plus_val = sqrt(SSR_V_cubico_plus / n_v);
+RMSE_quarto_train = sqrt(SSR_quarto / n);
+RMSE_quarto_val = sqrt(SSR_V_quarto / n_v);
 
 
 rmse_train_vals = [RMSE_quadratico_train, RMSE_cubico_train, RMSE_cubico_plus_train RMSE_quarto_train];
-rmse_test_vals  = [RMSE_quadratico_test, RMSE_cubico_test, RMSE_cubico_plus_test, RMSE_quarto_test];
+rmse_val_vals  = [RMSE_quadratico_val, RMSE_cubico_val, RMSE_cubico_plus_val, RMSE_quarto_val];
 x_axis = 1:4; 
 
 figure(19);
 plot(x_axis, rmse_train_vals, '-o', 'MarkerFaceColor', 'b');
 hold on
-plot(x_axis, rmse_test_vals, '-s', 'MarkerFaceColor', 'r');
+plot(x_axis, rmse_val_vals, '-s', 'MarkerFaceColor', 'r');
 
 grid on
 xticks(x_axis)
@@ -191,4 +198,4 @@ xticklabels({'Quadratico (q=6)', 'Cubico (q=8)', 'Cubico plus (q=10)', 'Quarto(q
 ylabel('RMSE (MW)')
 xlabel('Complessità del Modello (Grado Polinomio)')
 title('complessità vs RMSE')
-legend('Train RMSE', 'Test RMSE', 'Location', 'northeast')
+legend('Train RMSE', 'Validazione RMSE', 'Location', 'northeast')
