@@ -153,17 +153,14 @@ phi_V_quinto = [ones(n_v, 1), w_avg_val, w_avg_val.^2, w_avg_val.^3, w_avg_val.^
 load_cap_V_quinto = phi_V_quinto * thetaLS_quinto;
 epsilon_V_quinto = data_val.LOAD - load_cap_V_quinto;
 SSR_V_quinto = epsilon_V_quinto' * epsilon_V_quinto;
-min_SSR_V = min([SSR_V_quadratico, SSR_V_cubico, SSR_V_quarto, SSR_V_quinto]);
 
-fprintf('\nCROSS-VALIDAZIONE:\n')
-if(min_SSR_V == SSR_V_quadratico)
-    disp('scelgo modello quadratico')
-else if(min_SSR_V == SSR_V_cubico)
-    disp('scelgo modello cubico')
-else 
-    disp('scelgo modello quarto grado')
-end
-end
+SSRs = [SSR_V_quadratico, SSR_V_cubico, SSR_V_quarto, SSR_V_quinto];
+nomi = {'Quadratico', 'Cubico','Quarto Grado', 'Quinto Grado'};
+
+[min_SSR, idx] = min(SSRs);
+
+fprintf('\nRISULTATO CROSS-VALIDAZIONE:\n')
+fprintf('Il modello migliore è: %s (SSR: %.4e)\n', nomi{idx}, min_SSR);
 
 %% confronto complessità vs RMSE
 
@@ -178,7 +175,7 @@ RMSE_quinto_val = sqrt(SSR_V_quinto / n_v);
 
 rmse_train_vals = [RMSE_quadratico_train, RMSE_cubico_train, RMSE_quarto_train, RMSE_quinto_train];
 rmse_val_vals  = [RMSE_quadratico_val, RMSE_cubico_val, RMSE_quarto_val, RMSE_quinto_val];
-x_axis = 1:4; % 1=Quadratico, 2=Cubico, 3=Quarto
+x_axis = 1:4; 
 
 figure(12);
 plot(x_axis, rmse_train_vals, '-o', 'MarkerFaceColor', 'b');
@@ -193,3 +190,23 @@ xlabel('Complessità del Modello (Grado Polinomio)')
 title('complessità vs RMSE')
 legend('Training RMSE', 'Validazione RMSE', 'Location', 'northeast')
 
+%% prestazioni sul test set
+
+phi_finale = [ones((n + n_v), 1), w_avg_trainval, w_avg_trainval.^2, w_avg_trainval.^3, w_avg_trainval.^4];
+
+[thetaLS_finale, std_error_finale, var_cap_finale, var_thetaLS_finale] = lscov(phi_finale, data_trainval.LOAD);
+
+load_cap_finale = phi_finale * thetaLS_finale;
+epsilon_finale = data_trainval.LOAD - load_cap_finale;
+SSR_finale = epsilon_finale' * epsilon_finale;
+
+phi_V_finale = [ones(n_t, 1), w_avg_test, w_avg_test.^2, w_avg_test.^3, w_avg_test.^4];
+
+load_cap_V_finale = phi_V_finale * thetaLS_finale;
+epsilon_V_finale = data_test.LOAD - load_cap_V_finale;
+SSR_V_finale = epsilon_V_finale' * epsilon_V_finale;
+
+RMSE_finale_train = sqrt(SSR_finale / (n + n_v))
+RMSE_finale_test = sqrt(SSR_V_finale / n_t)
+mape_poly = mean(abs((data_test.LOAD - load_cap_V_finale) ./ data_test.LOAD)) * 100;
+fprintf('MAPE Polinomio 4° Grado: %.2f%%\n', mape_poly);
