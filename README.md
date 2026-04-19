@@ -25,6 +25,10 @@
 
 ## Final model: stepwise + Fourier terms vs 8-neuron MLP
 
+* **Neuron selection using k-fold cv and 1-SD rule**
+ <img width="840" height="630" alt="scelta_neuroni" src="https://github.com/user-attachments/assets/c27a5f99-82e4-42c1-862c-8c10c4aec79a" />
+<br>
+
 * **Response surface and performance**
 
 <img width="1728" height="720" alt="confronto_sup_step_vs_mlp" src="https://github.com/user-attachments/assets/be61bfb3-4b47-44df-8840-6186c1b8887e" />
