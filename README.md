@@ -1,4 +1,4 @@
-# STFL-Polynomial-MLP
+# STFL: Polynomial vs MLP
 
 ## Data exploration
 
