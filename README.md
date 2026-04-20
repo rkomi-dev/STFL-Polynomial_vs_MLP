@@ -41,3 +41,15 @@
 * **Goodness of Fit**
 
 <img width="1800" height="750" alt="confronto_gof_step_vs_mlp" src="https://github.com/user-attachments/assets/5cbb1f2f-8ee8-407f-af3b-c60d3649ff9a" />
+
+<br>
+
+* **Dispersion of residues**
+
+<img width="2160" height="1259" alt="disp_residui" src="https://github.com/user-attachments/assets/e1901be4-5ba4-4f04-9e80-cbde3f17984a" />
+
+<br>
+
+* **Residue histogram**
+
+<img width="2160" height="1259" alt="isto_residui" src="https://github.com/user-attachments/assets/07198afa-75d7-4be4-b998-46b633d1c664" />
