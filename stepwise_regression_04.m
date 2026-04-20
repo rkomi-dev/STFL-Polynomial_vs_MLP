@@ -1,4 +1,3 @@
-clear
 clc
 close all
 
@@ -35,43 +34,9 @@ X_test_candidati = [w_avg_test, data_test.TIMESTAMP, w_avg_test.^2, data_test.TI
     
     %commentato 6° grado perchè scende in train ma sale in validazione
 
-X_val_step = [ones(n_t, 1), X_test_candidati(:, in)];
-y_hat_step = X_val_step * theta_step;
-RMSE_step_train = sqrt(mean((data_trainval.LOAD - y_hat_train).^2));
-RMSE_step_test = sqrt(mean((data_test.LOAD - y_hat_step).^2));
-MAPE = mean(abs((data_test.LOAD - y_hat_step) ./ data_test.LOAD)) * 100;
-%% surfacing stepwise
+X_test_step = [ones(n_t, 1), X_test_candidati(:, in)];
 
-x = linspace(min(w_avg_train), max(w_avg_train), 50); 
-y = linspace(0, 23.9, 100);
-[X, Y] = meshgrid(x, y);
-
-x_vec = X(:);
-y_vec = Y(:);
-
-phi_grid_candidati = [x_vec, y_vec, x_vec.^2, y_vec.^2, x_vec.*y_vec, ...
-                      x_vec.^3, y_vec.^3, (x_vec.^2).*y_vec, x_vec.*(y_vec.^2), ...
-                      x_vec.^4, y_vec.^4, (x_vec.^2).*(y_vec.^2), x_vec.^5, y_vec.^5, ...
-    (x_vec.^4).* y_vec, (x_vec.^3).*( y_vec.^2), ...
-    (x_vec.^2).*( y_vec.^3), x_vec.*( y_vec.^4)];
-
-phi_grid_final = [ones(size(x_vec, 1), 1), phi_grid_candidati(:, in)];
-
-z_cap = phi_grid_final * theta_step;
-Z = reshape(z_cap, size(X));
-
-figure(26)
-mesh(X, Y, Z)
-hold on
-scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.1);
-
-xlabel('Temperatura Media (°C)')
-ylabel('Ora del Giorno')
-zlabel('Carico Elettrico (MW)')
-title('Superficie con Stepwise Regression');
-grid on
-
-%% stepwise + Fourier
+% stepwise + Fourier
 
 omega = 2 * pi / 24;
 
@@ -81,22 +46,25 @@ phi_step_arm = [X_train_step, ...
 
 [thetaLS_step_arm, std_error_step_arm] = lscov(phi_step_arm, data_trainval.LOAD);
 
-phi_V_step_arm = [X_val_step, ...
+phi_T_step_arm = [X_test_step, ...
     sin(omega * data_test.TIMESTAMP), cos(omega * data_test.TIMESTAMP), ...
     sin(2*omega * data_test.TIMESTAMP), cos(2*omega * data_test.TIMESTAMP)];
 
 % Predizione
-load_cap_V_step_arm = phi_V_step_arm * thetaLS_step_arm;
+load_cap_T_step_arm = phi_T_step_arm * thetaLS_step_arm;
 
-epsilon_V_step_arm = data_test.LOAD - load_cap_V_step_arm;
-RMSE_step_arm_test = sqrt(mean(epsilon_V_step_arm.^2));
-mape_step_arm = mean(abs(epsilon_V_step_arm ./ data_test.LOAD)) * 100;
+epsilon_T_step_arm = data_test.LOAD - load_cap_T_step_arm;
+RMSE_step_arm_test = sqrt(mean(epsilon_T_step_arm.^2));
+mape_step_arm = mean(abs(epsilon_T_step_arm ./ data_test.LOAD)) * 100;
+SSR_res_stepf = sum(epsilon_T_step_arm.^2);
+SSR_tot_stepf = sum((data_test.LOAD - (mean(data_test.LOAD))).^2);
+R2_stepf = 1 - (SSR_res_stepf / SSR_tot_stepf)
 
-fprintf('--- Confronto Modelli Polinomiali ---\n');
-fprintf('MAPE Polinomio 5° Puro: %.2f%%\n', MAPE);
-fprintf('MAPE Polinomio + Armoniche: %.2f%%\n', mape_step_arm);
+fprintf('RMSE stepwise + Armoniche: %.2f\n', RMSE_step_arm_test);
+fprintf('MAPE stepwise + Armoniche: %.2f%%\n', mape_step_arm);
+fprintf('R^2 stepwise + Armoniche: %.4f\n', R2_stepf);
 
-%% Surfacing Modello Polinomiale + Armoniche 
+%% Surfacing stepwise + Fourier
 x_surf_step = linspace(min(w_avg_trainval), max(w_avg_trainval), 50); 
 y_surf_step = linspace(0, 23.9, 100); 
 [X_surf_step, Y_surf_step] = meshgrid(x_surf_step, y_surf_step);
@@ -135,11 +103,11 @@ grid on
 %% goodness of fit
 
 figure(28)
-scatter(load_cap_V_step_arm, data_test.LOAD, 20, 'filled', 'MarkerFaceAlpha', 0.4);
+scatter(load_cap_T_step_arm, data_test.LOAD, 20, 'filled', 'MarkerFaceAlpha', 0.4);
 hold on;
 
 % bisettrice
-limiti = [min([load_cap_V_step_arm, data_test.LOAD]), max([load_cap_V_step_arm, data_test.LOAD])];
+limiti = [min([load_cap_T_step_arm, data_test.LOAD]), max([load_cap_T_step_arm, data_test.LOAD])];
 plot(limiti, limiti, 'r', 'LineWidth', 2);
 
 grid on;
@@ -148,29 +116,35 @@ ylabel('Carico Reale (MW)');
 title('Goodness of Fit - stepwise + Fourier');
 legend('Previsioni', 'Bisettrice', 'Location', 'NorthWest');
 
-%% subplot stepwise vs stepwise + Fourier
+%% subplot polinomio 5° + Fourier vs stepwise + Fourier
 
 figure(29);
 set(gcf, 'Position', [100, 100, 1200, 500]); 
 
-% Subplot 1: Solo Stepwise Polinomiale 
-subplot(1, 2, 1);
-mesh(X, Y, Z)
+% Subplot 1: Polinomio 5° grado + Fourier 
+ax1 = subplot(1, 2, 1);
+mesh(X_surf, Y_surf, Z_surf)
 hold on
 scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.05);
 xlabel('Temperatura Media (°C)'); ylabel('Ora del giorno'); zlabel('Carico (MW)');
-title(sprintf('Stepwise Puro\nRMSE: %.2f - MAPE: %.2f%%', RMSE_step_test, MAPE));
+title(sprintf('Polinomio 5° grado + Fourier\nRMSE: %.2f - MAPE: %.2f%% - R^2: %.4f', RMSE_arm_test, mape_arm, R2_polif));
 grid on; view(3);
 
 % Subplot 2: Stepwise + Fourier 
-subplot(1, 2, 2);
+ax2 = subplot(1, 2, 2);
 mesh(X_surf_step, Y_surf_step, Z_surf_step)
 hold on
 scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.05);
 xlabel('Temperatura Media (°C)'); ylabel('Ora del giorno'); zlabel('Carico (MW)');
-title(sprintf('Stepwise + Fourier\nRMSE: %.2f - MAPE: %.2f%%', RMSE_step_arm_test, mape_step_arm));
+title(sprintf('Stepwise + Fourier\nRMSE: %.2f - MAPE: %.2f%% - R^2: %.4f', RMSE_step_arm_test, mape_step_arm, R2_stepf));
 grid on; view(3);
 
+z_min = min([Z_surf(:); Z_surf_step(:)]);
+z_max = max([Z_surf(:); Z_surf_step(:)]);
+set([ax1, ax2], 'ZLim', [z_min z_max], 'View', [-35, 30]);
+
+h = linkprop([ax1, ax2], {'View', 'XLim', 'YLim', 'ZLim'});
+setappdata(gcf, 'StoreTheLink', h);
 sgtitle('Confronto superfici'); 
 
 figure(30); % Nuova figura per GoF
@@ -178,15 +152,15 @@ set(gcf, 'Position', [150, 150, 1200, 500]);
 
 % Subplot 1: GoF Stepwise Puro
 subplot(1, 2, 1);
-scatter(y_hat_step, data_test.LOAD, 20, 'filled', 'MarkerFaceAlpha', 0.3); 
+scatter(load_cap_T_arm, data_test.LOAD, 20, 'filled', 'MarkerFaceAlpha', 0.3); 
 hold on;
 plot(limiti, limiti, 'r', 'LineWidth', 2);
 grid on; xlabel('Carico Predetto (MW)'); ylabel('Carico Reale (MW)');
-title('GoF: Stepwise Puro');
+title('GoF: Polinomio 5° grado +  Fourier');
 
 % Subplot 2: GoF Stepwise + Fourier 
 subplot(1, 2, 2);
-scatter(load_cap_V_step_arm, data_test.LOAD, 20, 'filled', 'MarkerFaceAlpha', 0.3);
+scatter(load_cap_T_step_arm, data_test.LOAD, 20, 'filled', 'MarkerFaceAlpha', 0.3);
 hold on;
 plot(limiti, limiti, 'r', 'LineWidth', 2);
 grid on; xlabel('Carico Predetto (MW)'); ylabel('Carico Reale (MW)');
