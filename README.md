@@ -8,20 +8,23 @@
 
 * **Model complexity vs RMSE**
 
-<img width="840" height="630" alt="complessità_poli" src="https://github.com/user-attachments/assets/f1685807-3368-4302-8db9-26087fbf4478" />
+<img width="2160" height="1259" alt="complessità_poli" src="https://github.com/user-attachments/assets/fc3eb9cb-d213-47b8-b437-796ce728fb87" />
+
 <br>
 
 * **Response surface: 5th degree vs 5th degree + Fourier terms**
 
-<img width="1950" height="900" alt="confronto_sup_poli" src="https://github.com/user-attachments/assets/0173f221-7672-46c4-adb8-d789ab511b6f" />
+<img width="2160" height="1259" alt="confronto_sup_poli" src="https://github.com/user-attachments/assets/5eb5491d-5fd1-4d26-94f3-d030742a46ec" />
+
 
 <br>
 
 ## Modelling with Stepwise regression method
 
-* **Response surface: stepwise vs stepwise + Fourier terms**
+* **Response surface: 5th degree + Fourier terms vs stepwise + Fourier terms**
 
-<img width="1800" height="750" alt="confronto_sup_stepwise" src="https://github.com/user-attachments/assets/846da0eb-45ba-45e2-8b0e-17504bc6c07c" />
+<img width="2160" height="1259" alt="confronto_sup_poli_vs_step" src="https://github.com/user-attachments/assets/8ff12e19-8d3d-46aa-9eef-11f1888a9aa9" />
+
 
 ## Final model: stepwise + Fourier terms vs 8-neuron MLP
 
@@ -31,7 +34,8 @@
 
 * **Response surface and performance**
 
-<img width="1728" height="720" alt="confronto_sup_step_vs_mlp" src="https://github.com/user-attachments/assets/be61bfb3-4b47-44df-8840-6186c1b8887e" />
+<img width="2160" height="1259" alt="confronto_sup_step_vs_mlp" src="https://github.com/user-attachments/assets/ebf65e33-6436-4b2b-b511-be826885447d" />
+
  <br>
  
 * **Goodness of Fit**
