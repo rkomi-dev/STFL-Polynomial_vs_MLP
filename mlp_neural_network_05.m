@@ -1,4 +1,3 @@
-clear
 clc
 close all
 
@@ -120,11 +119,16 @@ y_test_real_mw = data_test.LOAD';
 
 errore = y_test_real_mw - y_test_pred_mw;
 MAPE_mlp = mean(abs(errore ./ y_test_real_mw)) * 100;
-RMSE = sqrt(mean(errore.^2));
+RMSE_mlp = sqrt(mean(errore.^2));
+SSR_res_mlp = sum(errore.^2);
+SSR_tot_mlp = sum((y_test_real_mw - (mean(y_test_real_mw))).^2);
+R2_mlp = 1 - (SSR_res_mlp / SSR_tot_mlp);
 
 fprintf('--- PERFORMANCE FINALI SUL TEST SET ---\n');
-fprintf('RMSE: %.4f MW\nMAPE: %.2f%%\n', RMSE, MAPE_mlp);
+fprintf('RMSE: %.4f MW\nMAPE: %.2f%%\nR2: %.4f\n', RMSE_mlp, MAPE_mlp, R2_mlp);
 
+% Salva la rete e i parametri di normalizzazione
+%save('modello_finale.mat', 'net_finale', 'settings_x', 'settings_y');
 %% boxplot dei residui
 figure;
 boxplot(errore, data_test.TIMESTAMP);
@@ -196,6 +200,8 @@ ylabel('Carico Reale (MW)');
 title('Goodness of Fit - MLP');
 legend('Previsioni MLP', 'Bisettrice', 'Location', 'NorthWest');
 
+
+
 %% confronto finale stepwise + Fourier vs MLP
 
 %% subplot stepwise vs MLP
@@ -210,7 +216,7 @@ scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'f
 xlabel('Temperatura Media (°C)')
 ylabel('Ora del giorno')
 zlabel('Carico elettrico (MW)')
-title(sprintf('Stepwise + Fourier\nRMSE: %.2f - MAPE: %.2f%%', RMSE_step_arm_test, mape_step_arm));
+title(sprintf('Stepwise + Fourier\nRMSE: %.2f - MAPE: %.2f%% - R^2: %.4f', RMSE_step_arm_test, mape_step_arm, R2_stepf));
 grid on
 
 % Subplot 2: MLP a 8 Neuroni
@@ -221,7 +227,7 @@ scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'f
 xlabel('Temperatura Media (°C)')
 ylabel('Ora del giorno')
 zlabel('Carico elettrico (MW)')
-title(sprintf('MLP con 8 Neuroni\n RMSE: %.2f - MAPE: %.2f%%', RMSE, MAPE));
+title(sprintf('MLP con 8 Neuroni\n RMSE: %.2f - MAPE: %.2f%% - R^2: %.4f', RMSE_mlp, MAPE_mlp, R2_mlp));
 grid on
 
 z_min = min([Z_surf_step(:); Z(:)]);
@@ -260,3 +266,60 @@ grid on; xlabel('Carico Predetto (MW)'); ylabel('Carico Reale (MW)');
 title('GoF: MLP con 8 neuroni');
 
 sgtitle('Confronto GOF');
+
+%% subplot dispersione dei residui
+
+figure;
+subplot(1,2,1);
+scatter(load_cap_T_step_arm, epsilon_T_step_arm, 10, 'filled', 'MarkerFaceAlpha', 0.2);
+hold on;
+yline(0, 'r', 'LineWidth', 2); % Linea dello zero (errore nullo)
+xlabel('Carico Predetto [MW]');
+ylabel('Residuo (Reale - Predetto) [MW]');
+title('Stepwise + Fourier');
+grid on;
+
+subplot(1,2,2);
+scatter(y_test_pred_mw, errore, 10, 'filled', 'MarkerFaceAlpha', 0.2);
+hold on;
+yline(0, 'r', 'LineWidth', 2); % Linea dello zero (errore nullo)
+xlabel('Carico Predetto [MW]');
+ylabel('Residuo (Reale - Predetto) [MW]');
+title('MLP con 8 neuroni');
+grid on
+
+sgtitle('Confronto dispersione dei residui');
+
+%% subplot istogramma dei residui
+
+figure;
+
+subplot(1,2,1)
+histogram(epsilon_T_step_arm, 50, 'Normalization', 'pdf', 'FaceColor', [0.4 0.6 0.8]);
+hold on;
+
+% Sovrapponiamo una curva normale teorica per confronto
+x_range = linspace(min(epsilon_T_step_arm), max(epsilon_T_step_arm), 100);
+norm_curve = normpdf(x_range, mean(epsilon_T_step_arm), std(epsilon_T_step_arm));
+plot(x_range, norm_curve, 'r', 'LineWidth', 2);
+
+xlabel('Errore [MW]');
+title('Stepwise + Fourier');
+grid on;
+legend('Residui Modello', 'Distribuzione Normale');
+
+subplot(1,2,2);
+histogram(errore, 50, 'Normalization', 'pdf', 'FaceColor', [0.4 0.6 0.8]);
+hold on;
+
+% Sovrapponiamo una curva normale teorica per confronto
+x_range = linspace(min(errore), max(errore), 100);
+norm_curve = normpdf(x_range, mean(errore), std(errore));
+plot(x_range, norm_curve, 'r', 'LineWidth', 2);
+
+xlabel('Errore [MW]');
+title('MLP con 8 neuroni');
+grid on;
+legend('Residui Modello', 'Distribuzione Normale');
+
+sgtitle('confronto istogrammi dei residui');
