@@ -1,4 +1,3 @@
-clear
 clc
 close all
 
@@ -200,13 +199,20 @@ load_cap_finale = phi_finale * thetaLS_finale;
 epsilon_finale = data_trainval.LOAD - load_cap_finale;
 SSR_finale = epsilon_finale' * epsilon_finale;
 
-phi_V_finale = [ones(n_t, 1), w_avg_test, w_avg_test.^2, w_avg_test.^3, w_avg_test.^4];
+phi_T_finale = [ones(n_t, 1), w_avg_test, w_avg_test.^2, w_avg_test.^3, w_avg_test.^4];
 
-load_cap_V_finale = phi_V_finale * thetaLS_finale;
-epsilon_V_finale = data_test.LOAD - load_cap_V_finale;
-SSR_V_finale = epsilon_V_finale' * epsilon_V_finale;
+load_cap_T_finale = phi_T_finale * thetaLS_finale;
+epsilon_T_finale = data_test.LOAD - load_cap_T_finale;
+SSR_T_finale = epsilon_T_finale' * epsilon_T_finale;
 
 RMSE_finale_train = sqrt(SSR_finale / (n + n_v))
-RMSE_finale_test = sqrt(SSR_V_finale / n_t)
-mape_poly = mean(abs((data_test.LOAD - load_cap_V_finale) ./ data_test.LOAD)) * 100;
+RMSE_finale_test = sqrt(SSR_T_finale / n_t)
+mape_poly = mean(abs((data_test.LOAD - load_cap_T_finale) ./ data_test.LOAD)) * 100;
+
+SSR_res_poli = sum(epsilon_T_finale.^2);
+SSR_tot_poli = sum((data_test.LOAD - (mean(data_test.LOAD))).^2);
+R2_poli = 1 - (SSR_res_poli / SSR_tot_poli);
+
+fprintf('RMSE Polinomio 4° Grado: %.2f\n', RMSE_finale_test);
 fprintf('MAPE Polinomio 4° Grado: %.2f%%\n', mape_poly);
+fprintf('R^2 Polinomio 4° Grado: %.4f\n', R2_poli);
