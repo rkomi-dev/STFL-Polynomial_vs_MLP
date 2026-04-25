@@ -2,9 +2,27 @@
 
 ## Data exploration
 
+<img width="2160" height="1259" alt="smile" src="https://github.com/user-attachments/assets/631093c7-436d-4475-8ef1-38e71e5fec48" />
+<br>
+<img width="2160" height="1259" alt="heatmap" src="https://github.com/user-attachments/assets/14e7b3ba-a295-4021-8e32-9d24fbc23a98" />
+<br>
 <img width="1728" height="1152" alt="carnet_plot" src="https://github.com/user-attachments/assets/41f62cd7-c31c-4902-9270-94f93ce77802" />
 
-## Modelling with polynomial regression with different degrees 
+<br>
+
+## Univariate analysis using the average temperature as the only regressor
+
+* **Model complexity vs RMSE**
+<img width="2160" height="1259" alt="complessità_univariata" src="https://github.com/user-attachments/assets/353a1d1d-dbfd-4364-becf-f1298182baa8" />
+
+<br>
+
+* **Response curve and performance**
+<img width="2160" height="1259" alt="curva_quarto_grado" src="https://github.com/user-attachments/assets/e2f26ef3-ad05-4265-b2c6-2825c537fa5e" />
+
+<br>
+
+## Modelling with polynomial regression using average temperature and timestamp
 
 * **Model complexity vs RMSE**
 
@@ -14,7 +32,8 @@
 
 * **Response surface: 5th degree vs 5th degree + Fourier terms**
 
-<img width="2160" height="1259" alt="confronto_sup_poli" src="https://github.com/user-attachments/assets/e2e9f5a6-6acc-4682-a2e0-8e62dfcee0a6" />
+<img width="2160" height="1259" alt="confronto_sup_poli(1)" src="https://github.com/user-attachments/assets/4a1351e1-78e7-45a3-8eff-6950032c517c" />
+
 
 
 
@@ -24,9 +43,10 @@
 
 * **Response surface: 5th degree + Fourier terms vs stepwise + Fourier terms**
 
-<img width="2160" height="1259" alt="confronto_sup_poli_vs_step" src="https://github.com/user-attachments/assets/12b4683b-2e00-4ffd-97eb-e2f3a315be3b" />
+<img width="2160" height="1259" alt="confronto_sup_poli_vs_step(1)" src="https://github.com/user-attachments/assets/577e3c92-b26d-497e-b743-60d0c8ea3ca1" />
 
 
+<br>
 
 ## Final comparison using average temperature: Stepwise + Fourier vs 8-neuron MLP
 
@@ -36,7 +56,8 @@
 
 * **Response surface and performance**
 
-<img width="2160" height="1259" alt="confronto_sup_step_vs_mlp" src="https://github.com/user-attachments/assets/f55d4d3e-0a03-4c6e-8a51-ed3a4a159beb" />
+<img width="2160" height="1259" alt="confronto_sup_step_vs_mlp(1)" src="https://github.com/user-attachments/assets/15f76241-2b36-4bbe-b627-14eab23c3103" />
+
 
 
  <br>
@@ -58,8 +79,15 @@
 
 <img width="2160" height="1259" alt="isto_residui" src="https://github.com/user-attachments/assets/07198afa-75d7-4be4-b998-46b633d1c664" />
 
+<br>
+
 ## Final model using all 25 temperatures
 
+* **Neuron selection using k-fold cv and 1-SD rule**
+
+<img width="2160" height="1259" alt="scelta_neuroni_25" src="https://github.com/user-attachments/assets/ca565e73-df8c-4342-b9db-ffa0f1fd7fc6" />
+
+<br>
 
 * **Goodness of Fit**
 
@@ -69,14 +97,28 @@
 
 * **Prediction**
 
-<img width="2160" height="1259" alt="confronto_pred_mlp" src="https://github.com/user-attachments/assets/a8ef2ec3-9429-4740-a90c-9ee811c9a3ed" />
+<img width="2160" height="1259" alt="confronto_pred_mlp(1)" src="https://github.com/user-attachments/assets/434c2e4f-9bb2-40c4-9b02-747074ba0f8e" />
 
-## Performance of all models
+<br>
 
-| MODELLO | RMSE | MAPE | R2 |
+* **Dispersion of residues**
+
+<img width="2160" height="1259" alt="confronto_disp_residui_mlp" src="https://github.com/user-attachments/assets/a9bb3b48-d508-4081-9466-594da9aac14b" />
+
+<br>
+
+* **Residue histogram**
+
+<img width="2160" height="1259" alt="isto_residui_25" src="https://github.com/user-attachments/assets/7458d171-a31c-4e07-985b-7fc6bffbf66b" />
+
+<br>
+
+## Performance of all models on test set
+
+| MODELLO | RMSE | MAPE | R^2 |
 | :--- | ---: | ---: | ---: |
 | Polinomio 5° grado + Fourier | 17.93 | 10.14% | 0.8507 |
-| stepwise + Fourier | 15.96 | 8.75% | 0.8818 |
-| mlp con 8 neuroni | 15.06 | 8.24% | 0.8947 |
-| mlp con 8 neuroni (25 temp) | 11.17 | 6.29% | 0.9420 |
-| mlp con 19 neuroni (25 temp) | 10.46 | 5.88% | 0.9492 |
+| Stepwise + Fourier | 15.96 | 8.75% | 0.8818 |
+| MLP con 8 neuroni | 15.06 | 8.24% | 0.8947 |
+| MLP con 8 neuroni (25 temp) | 11.17 | 6.29% | 0.9420 |
+| MLP con 19 neuroni (25 temp) | 10.46 | 5.88% | 0.9492 |
