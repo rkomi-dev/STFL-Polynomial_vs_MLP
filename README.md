@@ -51,7 +51,8 @@
 ## Final comparison using average temperature: Stepwise + Fourier vs 8-neuron MLP
 
 * **Neuron selection using k-fold cv and 1-SD rule**
- <img width="840" height="630" alt="scelta_neuroni" src="https://github.com/user-attachments/assets/c27a5f99-82e4-42c1-862c-8c10c4aec79a" />
+<img width="2160" height="1259" alt="scelta_neuroni" src="https://github.com/user-attachments/assets/88ae8661-8e45-4bef-bef1-bd417dfe76a3" />
+
 <br>
 
 * **Response surface and performance**
