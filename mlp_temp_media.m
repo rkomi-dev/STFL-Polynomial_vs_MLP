@@ -158,7 +158,7 @@ figure(22)
 mesh(X, Y, Z)
 hold on
 scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.1);
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Ora del Giorno')
 zlabel('Carico Elettrico (MW)')
 title('Superficie MLP con 8 neuroni');
@@ -214,7 +214,7 @@ ax1 = subplot(1, 2, 1);
 mesh(Xm, Ym, Zm)
 hold on
 scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.05);
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Ora del giorno')
 zlabel('Carico elettrico (MW)')
 title(sprintf('Stepwise + Fourier\nRMSE: %.2f - MAPE: %.2f%% - R^2: %.4f', rmse_step, mape_step, r2_step));
@@ -226,7 +226,7 @@ ax2 = subplot(1, 2, 2);
 mesh(X, Y, Z) 
 hold on
 scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.05);
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Ora del giorno')
 zlabel('Carico elettrico (MW)')
 title(sprintf('MLP con 8 Neuroni\n RMSE: %.2f - MAPE: %.2f%% - R^2: %.4f', RMSE_mlp, MAPE_mlp, R2_mlp));
@@ -350,17 +350,18 @@ figure;
 subplot(1, 2, 1)
 scatter(w_avg_test, data_test.LOAD, '.'), grid on;
 ylim([0, y_max]);
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Carico elettrico (MW)')
 title('Dati reali')
 
 subplot(1, 2, 2)
 scatter(w_avg_test, y_test_pred_mw, '.'), grid on;
 ylim([0, y_max]);
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Previsioni Carico elettrico (MW)')
 title('Previsioni MLP')
 
+sgtitle('Carico in funzione della temperatura media (Reale vs Predetto)')
 %% grafico reale vs predetto puntuale
 
 ore_da_visualizzare = 1:48; 
@@ -382,7 +383,7 @@ title('Confronto Puntuale: Reale vs MLP (Dettaglio 48h)');
 legend('Dati Reali', 'Predizioni MLP');
 
 
-%%
+%% Andamento temporale
 
 t = 1:length(data_test.LOAD);
 

@@ -36,20 +36,20 @@ n_t = height(data_test);
 % carico in funzione del tempo
 figure(1)
 plot(data.LOAD), grid on
-xlabel('tempo'), ylabel('carico elettrico')
-title('carico elettrico in funzione del tempo')
+xlabel('Tempo'), ylabel('Carico elettrico (MW)')
+sgtitle('Carico elettrico in funzione del tempo')
 
 % temp_media in funzione del tempo 
 figure(2)
 plot(w_avg), grid on
-xlabel('tempo'), ylabel('temperatura media') 
-title('temperatura media in funzione del tempo')
+xlabel('Tempo'), ylabel('Temperatura Media (°F)') 
+sgtitle('Temperatura media in funzione del tempo')
 
 % carico in funzione della temperatura media
 figure(3)
 scatter(w_avg, data.LOAD, '.'), grid on;
-xlabel('temperatura media'), ylabel('carico elettrico')
-title('carico elettrico in funzione della temperatura media')
+xlabel('Temperatura Media (°F)'), ylabel('Carico elettrico (MW)')
+sgtitle('Carico elettrico in funzione della temperatura media')
 
 %% Generazione Carpet Plot Annuali (Anni 1-6)
 ore_anno = 8760;
@@ -86,8 +86,12 @@ end
 
 sgtitle('Carpet Plots: Confronto del Carico Elettrico negli Anni');
 %% Matrice di Correlazione
-matrix_corr = corr(table2array(data(:, 2:27)));
+matrix_corr = corr(table2array(data(:, 3:27)));
 
-% Salvataggio per gli script successivi
+figure;
+heatmap(matrix_corr, 'ColorMap', flipud(hot));
+sgtitle('Heatmap della matrice di correlazione')
+
+%% Salvataggio per gli script successivi
 save('preprocessed_data.mat', 'w_avg', 'data_train', 'data_val', 'data_test', 'data_trainval', ...
     'w_avg_train', 'w_avg_val', 'w_avg_test', 'w_avg_trainval', 'n', 'n_v', 'n_t', 'temp_matrix');

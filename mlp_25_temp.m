@@ -176,18 +176,18 @@ figure;
 subplot(1, 2, 1)
 scatter(w_avg_test, data_test.LOAD, '.'), grid on;
 ylim([0, y_max]);
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Carico elettrico (MW)')
 title('Dati reali')
 
 subplot(1, 2, 2)
 scatter(w_avg_test, y_test_pred_mw_25, '.'), grid on;
 ylim([0, y_max]);
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Previsioni Carico elettrico (MW)')
 title('Previsioni MLP')
 
-
+sgtitle('Carico in funzione della temperatura media (Reale vs Predetto)')
 
 %% confronto mlp con 8 neuroni a temp media vs mlp con 19 neuroni a 25 temp
 
@@ -305,17 +305,18 @@ figure;
 subplot(1, 2, 2)
 scatter(w_avg_test, y_test_pred_mw_25, '.'), grid on;
 ylim([0, y_max]);
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Carico elettrico (MW)')
 title('Previsioni MLP con 19 neuroni a 25 temperature')
 
 subplot(1, 2, 1)
 scatter(w_avg_test, y_test_pred_mw, '.'), grid on;
 ylim([0, y_max]);
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Previsioni Carico elettrico (MW)')
 title('Previsioni MLP con 8 neuroni a temperatura media')
 
+sgtitle('Confronto predizioni')
 %% grafico reale vs predetto puntuale
 
 ore_da_visualizzare = 1:48; 
@@ -336,5 +337,43 @@ ylabel('Carico Elettrico (MW)');
 title('Confronto Puntuale: Reale vs MLP (Dettaglio 48h)');
 legend('Dati Reali', 'Predizioni MLP');
 
+%% Andamento temporale
+
+t = 1:length(data_test.LOAD);
+
+figure('Color', 'w', 'Name', 'Analisi Ciclicità Settimanale');
+
+% --- SETTIMANA 1 ---
+subplot(2, 1, 1)
+idx1 = 1:168;
+plot(t(idx1), data_test.LOAD(idx1), 'k', 'LineWidth', 1.2); hold on;
+plot(t(idx1), y_test_pred_mw_25(idx1), 'r--', 'LineWidth', 1.1);
+
+xlabel('Tempo (ore)');
+ylabel('Carico (MW)');
+title('Confronto Temporale: Prima Settimana');
+
+% Linee grigie ogni 24 ore per vedere i singoli giorni
+for d = 24:24:144
+    xline(d);
+end
+legend('Andamento Reale', 'Predizioni MLP', 'Location', 'northeast');
+
+% --- SETTIMANA 2 ---
+subplot(2, 1, 2)
+idx2 = 169:336;
+
+t_sett = 1:168; 
+plot(t_sett, data_test.LOAD(idx2), 'k', 'LineWidth', 1.2); hold on;
+plot(t_sett, y_test_pred_mw_25(idx2), 'r--', 'LineWidth', 1.1);
+
+xlabel('Tempo (ore)');
+ylabel('Carico (MW)');
+title('Confronto Temporale: Seconda Settimana');
+for d = 24:24:144
+    xline(d);
+end
+
+legend('Andamento Reale', 'Predizioni MLP');
 
 

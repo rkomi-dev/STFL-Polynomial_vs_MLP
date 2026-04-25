@@ -74,7 +74,7 @@ mesh(Xm, Ym, Zm, 'FaceAlpha', 0.7);
 hold on;
 scatter3(W_tr, T_tr, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.1);
 title(['Superficie Stepwise (R^2: ', num2str(r2_step,3), ')']);
-xlabel('Temperatura (°C)'); ylabel('Ora del giorno'); zlabel('Carico (MW)');
+xlabel('Temperatura (°F)'); ylabel('Ora del giorno'); zlabel('Carico (MW)');
 grid on; 
 
 %% goodness of fit
@@ -103,7 +103,7 @@ ax1 = subplot(1, 2, 1);
 mesh(X_surf, Y_surf, Z_surf)
 hold on
 scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.05);
-xlabel('Temperatura Media (°C)'); ylabel('Ora del giorno'); zlabel('Carico (MW)');
+xlabel('Temperatura Media (°F)'); ylabel('Ora del giorno'); zlabel('Carico (MW)');
 title(sprintf('Polinomio 5° grado + Fourier\nRMSE: %.2f - MAPE: %.2f%% - R^2: %.4f', RMSE_arm_test, mape_arm, R2_polif));
 grid on; view([-135, 30]);
 
@@ -112,7 +112,7 @@ ax2 = subplot(1, 2, 2);
 mesh(Xm, Ym, Zm)
 hold on
 scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.05);
-xlabel('Temperatura Media (°C)'); ylabel('Ora del giorno'); zlabel('Carico (MW)');
+xlabel('Temperatura Media (°F)'); ylabel('Ora del giorno'); zlabel('Carico (MW)');
 title(sprintf('Stepwise + Fourier\nRMSE: %.2f - MAPE: %.2f%% - R^2: %.4f', rmse_step, mape_step, r2_step));
 grid on; view([-135, 30]);
 

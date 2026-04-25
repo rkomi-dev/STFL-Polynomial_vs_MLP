@@ -269,7 +269,7 @@ figure(22)
 mesh(X, Y, Z), grid on;
 hold on
 scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.1);
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Ora del Giorno')
 zlabel('Carico Elettrico (MW)')
 title('Superficie con modello quinto grado')
@@ -356,7 +356,7 @@ figure(24)
 mesh(X_surf, Y_surf, Z_surf, 'FaceAlpha', 0.8)
 hold on
 scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.1);
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Ora del Giorno')
 zlabel('Carico (MW)')
 title('Superficie Polinomio 5° grado + Fourier')
@@ -387,7 +387,7 @@ set(gcf, 'Name', 'Confronto Superfici di Regressione', 'NumberTitle', 'off', 'Po
 subplot(1, 2, 1);
 mesh(X, Y, Z); hold on;
 scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.05);
-xlabel('Temperatura Media (°C)'); ylabel('Ora del giorno'); zlabel('Carico elettrico (MW)');
+xlabel('Temperatura Media (°F)'); ylabel('Ora del giorno'); zlabel('Carico elettrico (MW)');
 title(sprintf('Polinomio 5° grado\n RMSE: %.2f - MAPE: %.2f%% - R^2: %.4f', RMSE_finale_test, mape_poly, R2_poli));
 grid on; view(-135, 30);
 
@@ -395,7 +395,7 @@ grid on; view(-135, 30);
 subplot(1, 2, 2);
 mesh(X_surf, Y_surf, Z_surf); hold on;
 scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'filled', 'MarkerFaceAlpha', 0.05);
-xlabel('Temperatura Media (°C)'); ylabel('Ora del giorno'); zlabel('Carico elettrico (MW)');
+xlabel('Temperatura Media (°F)'); ylabel('Ora del giorno'); zlabel('Carico elettrico (MW)');
 title(sprintf('Polinomio 5° grado + Fourier\n RMSE: %.2f - MAPE: %.2f%% - R^2: %.4f', RMSE_arm_test, mape_arm, R2_polif));
 grid on; view(-135, 30);
 

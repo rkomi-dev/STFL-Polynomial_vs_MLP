@@ -254,7 +254,7 @@ figure(10)
 scatter(w_avg_trainval, data_trainval.LOAD, '.'), grid on;
 hold on
 plot(T_grid_finale, curva, 'r', 'LineWidth', 2)
-xlabel('Temperatura Media (°C)')
+xlabel('Temperatura Media (°F)')
 ylabel('Carico elettrico (MW)')
 legend('Dati training', 'Modello quarto grado')
 title(sprintf('Fitting: Carico vs Temperatura Media\n RMSE: %.2f - MAPE: %.2f%% - R^2: %.4f', ...
