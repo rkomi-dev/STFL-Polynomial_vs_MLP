@@ -145,17 +145,6 @@ else
     disp('scelgo modello quinto grado')
 end
 
-% quinto vs sesto
-
-f_alpha = finv(1 - alpha, 1, n - q_sesto);
-f = (n - q_quinto) * ((SSR_quinto - SSR_sesto ) / SSR_sesto);
-fprintf('\nTEST F:\n')
-fprintf('\nquinto vs sesto grado: \n');
-if(f < f_alpha) 
-    disp('scelgo modello quinto grado')
-else
-    disp('scelgo modello sesto grado')
-end
 %% cross-validazione
 
 phi_V_quadratico = [ones(n_v, 1), w_avg_val, w_avg_val.^2];
@@ -205,7 +194,6 @@ figure(12);
 plot(x_axis, rmse_train_vals, '-o', 'MarkerFaceColor', 'b');
 hold on
 plot(x_axis, rmse_val_vals, '-s', 'MarkerFaceColor', 'r');
-
 grid on
 xticks(x_axis)
 xticklabels({'Quadratico (q=3)', 'Cubico (q=4)', 'Quarto (q=5)', 'Quinto(q=6)'})
@@ -250,7 +238,7 @@ Phi_grid = [ones(length(T_grid_finale), 1), T_grid_finale, T_grid_finale.^2, ...
     T_grid_finale.^3, T_grid_finale.^4];
 curva = Phi_grid*thetaLS_finale;
 
-figure(10)
+figure(13)
 scatter(w_avg_trainval, data_trainval.LOAD, '.'), grid on;
 hold on
 plot(T_grid_finale, curva, 'r', 'LineWidth', 2)

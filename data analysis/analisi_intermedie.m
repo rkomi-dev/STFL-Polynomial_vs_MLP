@@ -5,7 +5,7 @@ load('preprocessed_data.mat');
 
 %% scatter carico-ora del giorno
 
-scatter(data_trainval.TIMESTAMP, data_trainval.LOAD);
+scatter(data_trainval.TIMESTAMP, data_trainval.LOAD), grid on;
 %% fitting modello con tutte le 25 temperature
 
 temp_matrix_trainval = temp_matrix(1:n+n_v, :);
@@ -14,7 +14,7 @@ phi_25_train = [ones(n + n_v, 1), temp_matrix_trainval];
 [thetaLS_25, std_error_25, var_cap_25, var_thetaLS_25] = lscov(phi_25_train, data_trainval.LOAD);
 
 % valori altalenanti dei parametri stimati
-figure(12)
+figure(13)
 bar(thetaLS_25(2:end)); 
 grid on;
 title('Valori dei coefficienti \theta_1...\theta_{25}');

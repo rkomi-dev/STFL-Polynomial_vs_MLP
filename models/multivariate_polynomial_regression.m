@@ -255,7 +255,7 @@ fprintf('MAPE Polinomio 5° Grado: %.2f%%\n', mape_poly);
 
 
 x = linspace(min(w_avg_trainval), max(w_avg_trainval), 50); 
-y = linspace(0, 24, 100);
+y = linspace(0, 23.9, 100);
 
 [X, Y] = meshgrid(x, y);
 x_vec = X(:);
@@ -272,7 +272,8 @@ scatter3(w_avg_trainval, data_trainval.TIMESTAMP, data_trainval.LOAD, 5, 'b', 'f
 xlabel('Temperatura Media (°F)')
 ylabel('Ora del Giorno')
 zlabel('Carico Elettrico (MW)')
-title('Superficie con modello quinto grado')
+%title('Superficie con modello quinto grado')
+view(-135, 30);
 %% goodness of fit
 
 figure(23)
@@ -333,7 +334,7 @@ fprintf('R2 Polinomio + Fourier: %.4f\n', R2_polif);
 %% Surfacing polinomio quinto grado + Fourier 
 
 x_surf = linspace(min(w_avg_trainval), max(w_avg_trainval), 50); 
-y_surf = linspace(0, 24, 100); 
+y_surf = linspace(0, 23.9, 100); 
 [X_surf, Y_surf] = meshgrid(x_surf, y_surf);
 
 T_period = 24;

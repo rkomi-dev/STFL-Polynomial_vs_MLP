@@ -47,19 +47,19 @@ rmse_step = sqrt(mean(err_step.^2));
 mape_step = mean(abs(err_step./data_test.LOAD))*100;
 r2_step = 1 - sum(err_step.^2)/sum((data_test.LOAD - mean(data_test.LOAD)).^2);
 
-fprintf('--- PERFORMANCE STEPWISE (Fourier 6 + Temp 5) ---\n');
+fprintf('--- PERFORMANCE STEPWISE ---\n');
 fprintf('RMSE: %.2f MW | MAPE: %.2f%% | R2: %.4f\n', rmse_step, mape_step, r2_step);
 
 %% surfacing stepwise + Fourier
 
 x_range = linspace(min(W_tr), max(W_tr), 60);
-y_range = linspace(0, 24, 100); 
+y_range = linspace(0, 23.9, 100); 
 [Xm, Ym] = meshgrid(x_range, y_range);
 Xf = Xm(:); Yf = Ym(:);
 
 X_temp_m = [Xf, Xf.^2, Xf.^3, Xf.^4, Xf.^5];
 X_time_m = [];
-for k = 1:6
+for k = 1:5
     X_time_m = [X_time_m, sin(k*omega*Yf), cos(k*omega*Yf)];
 end
 X_inter_m = [Xf.*sin(omega*Yf), Xf.*cos(omega*Yf), ...
@@ -144,4 +144,3 @@ grid on; xlabel('Carico Predetto (MW)'); ylabel('Carico Reale (MW)');
 title('GoF: Stepwise + Fourier');
 
 sgtitle('Confronto GOF');
-

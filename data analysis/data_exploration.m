@@ -95,3 +95,24 @@ sgtitle('Heatmap della matrice di correlazione')
 %% Salvataggio per gli script successivi
 save('preprocessed_data.mat', 'w_avg', 'data_train', 'data_val', 'data_test', 'data_trainval', ...
     'w_avg_train', 'w_avg_val', 'w_avg_test', 'w_avg_trainval', 'n', 'n_v', 'n_t', 'temp_matrix');
+
+figure('Color', 'w', 'Name', 'Analisi Esplorativa Carico-Temperatura');
+%% subplot esplorativo
+
+limiti_tempo = [1, length(data.LOAD)];
+% Carico nel tempo
+subplot(2, 1, 1)
+plot(data.LOAD, 'Color', [0.2 0.4 0.6], 'LineWidth', 1)
+grid on
+ylabel('Carico Elettrico (MW)')
+xlim(limiti_tempo)
+title('Andamento Temporale del Carico Elettrico')
+
+% Temperatura nel tempo
+subplot(2, 1, 2)
+plot(w_avg, 'Color', [0.8 0.3 0.1], 'LineWidth', 1)
+grid on
+ylabel('Temperatura media (°F)')
+xlim(limiti_tempo)
+title('Andamento Temporale della Temperatura Media')
+

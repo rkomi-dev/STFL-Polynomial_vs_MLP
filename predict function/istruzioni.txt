@@ -1,0 +1,11 @@
+# ISTRUZIONI per la function predict_load(X)
+
+- X deve essere una tabella con 26 colonne, la prima deve contenere il TIMESTAMP e le successive le 25 temperature
+
+- Assicurarsi che il file modello_finale.mat sia presente nella cartella di lavoro corrente o nel path di MATLAB
+
+- La tabella X non deve contenere valori NaN
+
+- Il TIMESTAMP viene trasformato in variabili seno e coseno 
+
+- Avviene normalizzazione dell'input tramite metodo Min-Max
